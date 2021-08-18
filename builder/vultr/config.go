@@ -47,6 +47,8 @@ type Config struct {
 
 func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 
+	var warnings []string
+
 	if err := config.Decode(c, &config.DecodeOpts{
 		Interpolate:        true,
 		InterpolateContext: &c.ctx,
@@ -56,7 +58,7 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 			},
 		},
 	}, raws...); err != nil {
-		return nil, err
+		return warnings, err
 	}
 
 	var errs *packer.MultiError
@@ -100,7 +102,7 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 	}
 
 	if (c.SnapshotID != "" || c.ISOID != "") && c.Comm.SSHPassword == "" && c.Comm.SSHPrivateKeyFile == "" {
-		errs = packer.MultiErrorAppend(errs, errors.New("either `ssh_password` or `ssh_private_key_file` must be defined for snapshot or custom OS"))
+		warnings = append(warnings, "either `ssh_password` or `ssh_private_key_file` would need be defined for snapshot or custom OS")
 	}
 
 	if c.RawStateTimeout == "" {
@@ -118,10 +120,10 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 	}
 
 	if errs != nil && len(errs.Errors) > 0 {
-		return nil, errs
+		return warnings, errs
 	}
 
 	packer.LogSecretFilter.Set(c.APIKey)
 
-	return nil, nil
+	return warnings, nil
 }
