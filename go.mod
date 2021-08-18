@@ -1,4 +1,4 @@
-module github.com/vultr/packer-plugin-vultr
+module github.com/onfocusio/packer-plugin-vultr
 
 go 1.16
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/packer-plugin-sdk/plugin"
 	"github.com/hashicorp/packer-plugin-sdk/version"
-	"github.com/vultr/packer-plugin-vultr/builder/vultr"
+	"github.com/onfocusio/packer-plugin-vultr/builder/vultr"
 )
 
 var (
